@@ -1,22 +1,37 @@
 {
-  "name": "rollbar/rollbar",
-  "description": "Monitors errors and exceptions and reports them to Rollbar",
-  "type": "library",
-  "keywords": ["logging", "debugging", "monitoring", "errors", "exceptions"],
-  "version": "0.5.4",
-  "license": "MIT",
-  "homepage": "http://github.com/rollbar/rollbar-php",
-  "authors": [
-    {
-      "name": "Brian Rue",
-      "email": "brian@rollbar.com",
-      "role": "Developer"
-    }
-  ],
-  "support": {
-    "email": "support@rollbar.com"
-  },
-  "autoload": {
-    "files": ["rollbar.php"]
-  }
+    "name" : "ftrrtf/rollbar-php",
+    "description" : "Monitors errors and exceptions and reports them to Rollbar",
+    "keywords" : ["logging", "debugging", "monitoring", "errors", "exceptions"],
+    "type" : "library",
+    "license" : "MIT",
+    "version" : "0.1",
+    "authors" : [
+        {
+            "name" : "Valeriy Rabievskiy",
+            "email" : "dev@ftrrtf.com",
+            "role" : "Developer"
+        },
+        {
+            "name" : "Brian Rue",
+            "email" : "brian@rollbar.com",
+            "role" : "Developer"
+        }
+    ],
+    "require" : {
+        "symfony/options-resolver" : "v2.3.6",
+        "ext-curl" : "*",
+        "php" : ">=5.3"
+    },
+    "require-dev" : {
+        "phpspec/phpspec" : "2.0.*@dev"
+    },
+    "config" : {
+        "bin-dir" : "bin"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Ftrrtf\\" : "src/"
+        }
+    },
+    "target-dir" : "Ftrrtf/Rollbar"
 }

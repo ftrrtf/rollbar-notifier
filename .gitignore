@@ -1,2 +1,3 @@
-*.swp
-*.swo
+composer.lock
+vendor
+bin

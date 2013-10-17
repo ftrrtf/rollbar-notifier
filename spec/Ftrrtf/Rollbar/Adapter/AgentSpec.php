@@ -1,0 +1,27 @@
+<?php
+
+namespace spec\Ftrrtf\Rollbar\Adapter;
+
+use PhpSpec\ObjectBehavior;
+use Prophecy\Argument;
+
+class AgentSpec extends ObjectBehavior
+{
+    public function let()
+    {
+        $agentPath = 'path/to/agent';
+
+        $this->beConstructedWith($agentPath);
+    }
+
+    function it_is_initializable()
+    {
+        $this->shouldHaveType('Ftrrtf\Rollbar\Adapter\Agent');
+        $this->shouldImplement('Ftrrtf\Rollbar\Adapter\AdapterInterface');
+    }
+
+    public function it_send_items_to_agent()
+    {
+        $this->send(array());
+    }
+}
