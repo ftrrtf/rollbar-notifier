@@ -1,5 +1,5 @@
 {
-    "name" : "ftrrtf/rollbar-php",
+    "name" : "ftrrtf/rollbar",
     "description" : "Monitors errors and exceptions and reports them to Rollbar",
     "keywords" : ["logging", "debugging", "monitoring", "errors", "exceptions"],
     "type" : "library",
@@ -30,8 +30,7 @@
     },
     "autoload" : {
         "psr-0" : {
-            "Ftrrtf\\Rollbar" : "src/"
+            "Ftrrtf\\" : "src/"
         }
-    },
-    "target-dir" : "Ftrrtf/Rollbar"
+    }
 }
