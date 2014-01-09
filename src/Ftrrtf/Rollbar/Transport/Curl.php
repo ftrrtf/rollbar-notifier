@@ -1,8 +1,8 @@
 <?php
 
-namespace Ftrrtf\Rollbar\Adapter;
+namespace Ftrrtf\Rollbar\Transport;
 
-class Curl implements AdapterInterface
+class Curl implements TransportInterface
 {
     protected $timeout;
     protected $baseApiUrl;

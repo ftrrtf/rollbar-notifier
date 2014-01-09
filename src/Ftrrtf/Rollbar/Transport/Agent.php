@@ -1,8 +1,8 @@
 <?php
 
-namespace Ftrrtf\Rollbar\Adapter;
+namespace Ftrrtf\Rollbar\Transport;
 
-class Agent implements AdapterInterface
+class Agent implements TransportInterface
 {
     protected $pathToAgent;
 
@@ -16,7 +16,7 @@ class Agent implements AdapterInterface
     public function send($items)
     {
         foreach ($items as $item) {
-            fwrite($this->agentLog, json_encode($item) . "\n");
+            fwrite($this->getAgent(), json_encode($item) . "\n");
         }
     }
 

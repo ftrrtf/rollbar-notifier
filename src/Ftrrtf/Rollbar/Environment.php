@@ -17,8 +17,8 @@ class Environment
     protected $requestData = null;
     protected $serverData = null;
     protected $personData = null;
-
 //    protected $codeVersion = null;
+
 //    protected $branch = 'master';
 //
 //    protected $environment = 'production';
@@ -27,6 +27,8 @@ class Environment
 //    protected $host = null;
 
     protected $options;
+    protected $requiredOptions = array();
+
 
     /**
      * @param array $options
@@ -36,6 +38,14 @@ class Environment
         $resolver = new OptionsResolver();
         $this->setDefaultOptions($resolver);
         $this->options = $resolver->resolve($options);
+    }
+
+    public function setOption($option, $value)
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults($this->options);
+        $resolver->setRequired($this->requiredOptions);
+        $this->options = $resolver->resolve(array($option => $value));
     }
 
     /**
@@ -220,6 +230,25 @@ class Environment
         return $this->options['code_version'];
     }
 
+    public function getFramework()
+    {
+        return $this->options['framework'];
+    }
+
+    public function getCustomData()
+    {
+        $custom = array();
+
+        $startRequestTime = isset($_SERVER['REQUEST_TIME_FLOAT'])
+            ? $_SERVER['REQUEST_TIME_FLOAT']
+            : (isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_TIME'] : false);
+
+        if ($startRequestTime) {
+            $custom['runtime'] = microtime(true) - $startRequestTime;
+        }
+
+        return $custom;
+    }
 
     /**
      * @param OptionsResolverInterface $resolver
@@ -256,25 +285,7 @@ class Environment
                 'scrub_fields' => 'array',
             )
         );
-    }
 
-    public function getFramework()
-    {
-        return $this->options['framework'];
-    }
-
-    public function getCustomData()
-    {
-        $custom = array();
-
-        $startRequestTime = isset($_SERVER['REQUEST_TIME_FLOAT'])
-            ? $_SERVER['REQUEST_TIME_FLOAT']
-            : (isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_TIME'] : false);
-
-        if ($startRequestTime) {
-            $custom['runtime'] = microtime(true) - $startRequestTime;
-        }
-
-        return $custom;
+        $resolver->setRequired($this->requiredOptions);
     }
 }

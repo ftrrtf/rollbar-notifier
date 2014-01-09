@@ -1,6 +1,6 @@
 <?php
 
-namespace Ftrrtf\Rollbar\Adapter;
+namespace Ftrrtf\Rollbar\Transport;
 
 class AgentNotFoundException extends \Exception
 {}

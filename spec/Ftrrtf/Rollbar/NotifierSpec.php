@@ -2,17 +2,15 @@
 
 namespace spec\Ftrrtf\Rollbar;
 
+use Ftrrtf\Rollbar\Transport\TransportInterface;
+use Ftrrtf\Rollbar\Environment;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class NotifierSpec extends ObjectBehavior
 {
 
-    /**
-     * @param \Ftrrtf\Rollbar\Environment $environment
-     * @param \Ftrrtf\Rollbar\Adapter\AdapterInterface $adapter
-     */
-    public function let($environment, $adapter)
+    public function let(Environment $environment, TransportInterface $transport)
     {
         $options = array(
             'access_token' => 'token',
@@ -20,12 +18,29 @@ class NotifierSpec extends ObjectBehavior
         );
 
         $this->beConstructedWith($environment, $options);
-        $this->setAdapter($adapter);
+        $this->setTransport($transport);
     }
 
     public function it_is_initializable()
     {
         $this->shouldHaveType('Ftrrtf\Rollbar\Notifier');
+    }
+
+    public function it_is_set_allowed_option()
+    {
+        $this->setOption('batched', true);
+    }
+
+    public function it_is_set_not_allowed_option()
+    {
+        $this
+            ->shouldThrow('Symfony\Component\OptionsResolver\Exception\InvalidOptionsException')
+            ->duringSetOption('custom', true);
+    }
+
+    public function it_get_environment(Environment $environment)
+    {
+        $this->getEnvironment()->shouldReturn($environment);
     }
 
     public function it_report_message()
@@ -50,12 +65,9 @@ class NotifierSpec extends ObjectBehavior
         $this->reportBacktraceMessage(debug_backtrace(), 'message');
     }
 
-    /**
-     * @param \Ftrrtf\Rollbar\Adapter\AdapterInterface $adapter
-     */
-    public function it_should_be_use_adapter_to_send_message($adapter)
+    public function it_should_be_use_adapter_to_send_message(TransportInterface $transport)
     {
-        $adapter->send(Argument::any())->shouldBeCalled();
+        $transport->send(Argument::any())->shouldBeCalled();
 
         $this->reportMessage('message text');
     }

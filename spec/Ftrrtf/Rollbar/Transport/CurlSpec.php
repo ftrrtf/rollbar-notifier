@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Ftrrtf\Rollbar\Adapter;
+namespace spec\Ftrrtf\Rollbar\Transport;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -20,8 +20,8 @@ class CurlSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Ftrrtf\Rollbar\Adapter\Curl');
-        $this->shouldImplement('Ftrrtf\Rollbar\Adapter\AdapterInterface');
+        $this->shouldHaveType('Ftrrtf\Rollbar\Transport\Curl');
+        $this->shouldImplement('Ftrrtf\Rollbar\Transport\TransportInterface');
     }
 
     public function it_send_logs_to_api()

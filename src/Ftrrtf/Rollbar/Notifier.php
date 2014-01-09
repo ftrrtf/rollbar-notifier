@@ -2,8 +2,8 @@
 
 namespace Ftrrtf\Rollbar;
 
-use Ftrrtf\Rollbar\Adapter\AdapterInterface;
-use Ftrrtf\Rollbar\Adapter\Curl;
+use Ftrrtf\Rollbar\Transport\TransportInterface;
+use Ftrrtf\Rollbar\Transport\Curl;
 use Ftrrtf\Rollbar\Report;
 use Ftrrtf\Rollbar\Report\ReportInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -55,9 +55,9 @@ class Notifier
     protected $environment = null;
 
     /**
-     * @var AdapterInterface
+     * @var TransportInterface
      */
-    protected $adapter;
+    protected $transport;
 
     protected $mtRandmax;
 
@@ -101,22 +101,27 @@ class Notifier
         $resolver->setRequired($this->requiredOptions);
     }
 
-    public function setAdapter(AdapterInterface $adapter)
+    public function setTransport(TransportInterface $transport)
     {
-        $this->adapter = $adapter;
+        $this->transport = $transport;
     }
 
     /**
-     * @return \Ftrrtf\Rollbar\Adapter\AdapterInterface
+     * @return TransportInterface
      */
-    public function getAdapter()
+    public function getTransport()
     {
-        // Default adapter
-        if (is_null($this->adapter)) {
-            $this->setAdapter(new Curl());
+        // Default transport
+        if (is_null($this->transport)) {
+            $this->setTransport(new Curl());
         }
 
-        return $this->adapter;
+        return $this->transport;
+    }
+
+    public function getEnvironment()
+    {
+        return $this->environment;
     }
 
     public function reportException($exception)
@@ -235,10 +240,10 @@ class Notifier
      */
     public function flush()
     {
-        $queue_size = count($this->queue);
-        if (!$this->options['batched'] || $queue_size > 0) {
-            $this->logInfo('Flushing queue of size ' . $queue_size);
-            $this->getAdapter()->send($this->queue);
+        $queueSize = count($this->queue);
+        if (!$this->options['batched'] || $queueSize > 0) {
+            $this->logInfo('Flushing queue of size ' . $queueSize);
+            $this->getTransport()->send($this->queue);
             $this->queue = array();
         }
     }
@@ -271,7 +276,7 @@ class Notifier
             'code_version' => $this->environment->getCodeVersion(),
             'framework' => $this->environment->getFramework(),
             'timestamp' => time(),
-            'language' => PHP_VERSION,
+            'language' => 'php ' . PHP_VERSION,
             'level' => $level,
             'notifier' => array(
                 'name' => 'ftrrtf-rollbar-notifier',
@@ -335,22 +340,22 @@ class Notifier
 
     /* Logging */
 
-    private function logInfo($msg)
+    protected function logInfo($msg)
     {
         $this->logMessage("INFO", $msg);
     }
 
-    private function logWarning($msg)
+    protected function logWarning($msg)
     {
         $this->logMessage("WARNING", $msg);
     }
 
-    private function logError($msg)
+    protected function logError($msg)
     {
         $this->logMessage("ERROR", $msg);
     }
 
-    private function logMessage($level, $msg)
+    protected function logMessage($level, $msg)
     {
         if ($this->logger !== null) {
             $this->logger->log($level, $msg);

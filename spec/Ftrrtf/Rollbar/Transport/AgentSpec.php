@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Ftrrtf\Rollbar\Adapter;
+namespace spec\Ftrrtf\Rollbar\Transport;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -16,8 +16,8 @@ class AgentSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Ftrrtf\Rollbar\Adapter\Agent');
-        $this->shouldImplement('Ftrrtf\Rollbar\Adapter\AdapterInterface');
+        $this->shouldHaveType('Ftrrtf\Rollbar\Transport\Agent');
+        $this->shouldImplement('Ftrrtf\Rollbar\Transport\TransportInterface');
     }
 
     public function it_send_items_to_agent()
