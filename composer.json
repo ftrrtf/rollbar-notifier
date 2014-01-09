@@ -1,5 +1,5 @@
 {
-    "name" : "ftrrtf/rollbar",
+    "name" : "ftrrtf/rollbar-notifier",
     "description" : "Monitors errors and exceptions and reports them to Rollbar",
     "keywords" : ["logging", "debugging", "monitoring", "errors", "exceptions"],
     "type" : "library",
