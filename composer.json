@@ -18,10 +18,19 @@
         }
     ],
     "require" : {
+        "symfony/options-resolver" : "v2.3.6",
         "ext-curl" : "*",
         "php" : ">=5.3"
     },
-    "autoload": {
-        "files": ["rollbar.php"]
+    "require-dev" : {
+        "phpspec/phpspec" : "2.0.*@dev"
+    },
+    "config" : {
+        "bin-dir" : "bin"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Ftrrtf\\" : "src/"
+        }
     }
 }
