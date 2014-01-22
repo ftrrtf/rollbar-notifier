@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class Notifier
 {
     const VERSION = '0.1';
-    const ROLLBAR_CLIENT_COMPATIBILITY_VERSION = "0.5.5";
+    const ROLLBAR_CLIENT_COMPATIBILITY_VERSION = "0.6.0";
 
     // ignore E_STRICT and above
 //    protected $maxErrno = E_USER_NOTICE;
@@ -91,6 +91,7 @@ class Notifier
             array(
                 'batched' => true,
                 'batch_size' => 50,
+                'report_suppressed' => false
 //                'capture_error_backtraces',
 //                'error_sample_rates',
 //                'logger',
@@ -173,6 +174,11 @@ class Notifier
 
     public function reportPhpError($errorLevel, $errorMessage, $errorFile, $errorLine)
     {
+        if (error_reporting() === 0 && !$this->options['report_suppressed']) {
+
+            // ignore
+            return false;
+        }
 
 //        // fill in missing values in error_sample_rates
 //        $levels = array(
