@@ -282,7 +282,8 @@ class Notifier
             'code_version' => $this->environment->getCodeVersion(),
             'framework' => $this->environment->getFramework(),
             'timestamp' => time(),
-            'language' => 'php ' . PHP_VERSION,
+            'language' => 'php',
+            'language_version' => PHP_VERSION,
             'level' => $level,
             'notifier' => array(
                 'name' => 'ftrrtf-rollbar-notifier',
