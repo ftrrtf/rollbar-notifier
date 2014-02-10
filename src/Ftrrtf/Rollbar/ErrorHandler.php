@@ -9,6 +9,7 @@ namespace Ftrrtf\Rollbar;
  */
 class ErrorHandler
 {
+    static $registerShutdownFlag = false;
 
     /**
      * @param Notifier $notifier
@@ -36,12 +37,16 @@ class ErrorHandler
     public function registerShutdownHandler(Notifier $notifier)
     {
         $self = $this;
-        set_exception_handler(function() use ($notifier, $self){
-            if (false != ($lastError = $self->catchLastError())) {
-                $notifier->reportPhpError($lastError['type'], $lastError['message'], $lastError['file'], $lastError['line']);
-            }
-            $notifier->flush();
-        });
+
+        if (!self::$registerShutdownFlag) {
+            register_shutdown_function(function() use ($notifier, $self){
+                if (false != ($lastError = $self->catchLastError())) {
+                    $notifier->reportPhpError($lastError['type'], $lastError['message'], $lastError['file'], $lastError['line']);
+                }
+                $notifier->flush();
+            });
+            self::$registerShutdownFlag = true;
+        }
     }
 
     /**
