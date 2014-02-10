@@ -17,15 +17,6 @@ class Environment
     protected $requestData = null;
     protected $serverData = null;
     protected $personData = null;
-//    protected $codeVersion = null;
-
-//    protected $branch = 'master';
-//
-//    protected $environment = 'production';
-//    protected $root = '';
-//
-//    protected $host = null;
-
     protected $options;
     protected $requiredOptions = array();
 
@@ -70,12 +61,22 @@ class Environment
                 $this->requestData['headers'] = $headers;
             }
 
+            if ($this->requestData['method'] == 'PUT') {
+                parse_str(file_get_contents("php://input"), $this->requestData['PUT']);
+            }
+
+            if ($this->requestData['method'] == 'DELETE') {
+                parse_str(file_get_contents("php://input"), $this->requestData['DELETE']);
+            }
+
             if ($_GET) {
                 $this->requestData['GET'] = $_GET;
             }
+
             if ($_POST) {
                 $this->requestData['POST'] = $this->scrubRequestParams($_POST);
             }
+
             if (isset($_SESSION) && $_SESSION) {
                 $this->requestData['session'] = $this->scrubRequestParams($_SESSION);
             }
@@ -153,7 +154,7 @@ class Environment
         if ($this->serverData === null) {
             $this->serverData['host'] = $this->options['host'];
             $this->serverData['branch'] = $this->options['branch'];
-            $this->serverData['root'] = $this->options['root'];
+            $this->serverData['root'] = $this->options['root_dir'];
 
             if (isset($_SERVER['USER'])) {
                 $this->serverData['user'] = $_SERVER['USER'];
@@ -190,8 +191,8 @@ class Environment
             }
 
             // second priority: try to use $this->person_fn
-            if ($this->options['personFn'] && is_callable($this->options['personFn'])) {
-                $data = @call_user_func($this->options['personFn']);
+            if ($this->options['person_callback'] && is_callable($this->options['person_callback'])) {
+                $data = @call_user_func($this->options['person_callback']);
                 if (isset($data['id'])) {
                     $this->personData = $data;
                     return $this->personData;
@@ -260,14 +261,11 @@ class Environment
                 'code_version' => null,
                 'branch' => 'master',
                 'environment' => 'production',
-                'root' => null,
+                'root_dir' => null,
                 'framework' => null,
-                'host' => function (Options $options) {
-                    // PHP 5.3.0
-                    return function_exists('gethostname') ? gethostname() : php_uname('n');
-                },
+                'host' => function_exists('gethostname') ? gethostname() : php_uname('n'),
                 'person' => array(),
-                'personFn' => null,
+                'person_callback' => null,
                 'scrub_fields' => array(
                     'passwd',
                     'password',
