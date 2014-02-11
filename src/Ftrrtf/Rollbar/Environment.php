@@ -112,10 +112,33 @@ class Environment
             return null;
         }
 
-        // should work with apache. not sure about other environments.
-        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-        $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'unknown';
-        $port = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
+        if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+            $protocol = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']);
+        } else if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+            $protocol = 'https';
+        } else {
+            $protocol = 'http';
+        }
+
+        if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+            $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+        } else if (!empty($_SERVER['HTTP_HOST'])) {
+            $parts = explode(':', $_SERVER['HTTP_HOST']);
+            $host = $parts[0];
+        } else if (!empty($_SERVER['SERVER_NAME'])) {
+            $host = $_SERVER['SERVER_NAME'];
+        } else {
+            $host = 'unknown';
+        }
+
+        if (!empty($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+            $port = $_SERVER['HTTP_X_FORWARDED_PORT'];
+        } else if (!empty($_SERVER['SERVER_PORT'])) {
+            $port = $_SERVER['SERVER_PORT'];
+        } else {
+            $port = 80;
+        }
+
         $path = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
 
         $url = $protocol . '://' . $host;
@@ -268,6 +291,7 @@ class Environment
                 'person_callback' => null,
                 'scrub_fields' => array(
                     'passwd',
+                    'pass',
                     'password',
                     'secret',
                     'confirm_password',

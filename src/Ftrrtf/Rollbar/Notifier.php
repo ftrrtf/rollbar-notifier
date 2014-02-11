@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class Notifier
 {
     const VERSION = '0.1';
-    const ROLLBAR_CLIENT_COMPATIBILITY_VERSION = "0.6.0";
+    const ROLLBAR_CLIENT_COMPATIBILITY_VERSION = "0.6.2";
 
     // ignore E_STRICT and above
 //    protected $maxErrno = E_USER_NOTICE;
