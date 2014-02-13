@@ -15,9 +15,29 @@ class PhpError extends BaseReport
             'constant' => 'E_WARNING',
             'level' => 'warning'
         ),
+        4 => array(
+            'constant' => 'E_PARSE',
+            'level' => 'error'
+        ),
         8 => array(
             'constant' => 'E_NOTICE',
             'level' => 'info'
+        ),
+        16 => array(
+            'constant' => 'E_CORE_ERROR',
+            'level' => 'error'
+        ),
+        32 => array(
+            'constant' => 'E_CORE_WARNING',
+            'level' => 'error'
+        ),
+        64 => array(
+            'constant' => 'E_COMPILE_ERROR',
+            'level' => 'error'
+        ),
+        128 => array(
+            'constant' => 'E_COMPILE_WARNING',
+            'level' => 'error'
         ),
         256 => array(
             'constant' => 'E_USER_ERROR',
