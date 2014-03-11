@@ -4,7 +4,6 @@
     "keywords" : ["logging", "debugging", "monitoring", "errors", "exceptions"],
     "type" : "library",
     "license" : "MIT",
-    "version" : "0.1",
     "authors" : [
         {
             "name" : "Valeriy Rabievskiy",
