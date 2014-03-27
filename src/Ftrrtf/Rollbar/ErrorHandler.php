@@ -26,8 +26,9 @@ class ErrorHandler
      */
     public function registerErrorHandler(Notifier $notifier)
     {
-        set_error_handler(function($errorLevel, $errorMessage, $errorFile, $errorLine) use ($notifier){
+        set_error_handler(function($errorLevel, $errorMessage, $errorFile, $errorLine) use ($notifier) {
             $notifier->reportPhpError($errorLevel, $errorMessage, $errorFile, $errorLine);
+            return false;
         });
     }
 
@@ -39,7 +40,7 @@ class ErrorHandler
         $self = $this;
 
         if (!self::$registerShutdownFlag) {
-            register_shutdown_function(function() use ($notifier, $self){
+            register_shutdown_function(function() use ($notifier, $self) {
                 if (false != ($lastError = $self->catchLastError())) {
                     $notifier->reportPhpError($lastError['type'], $lastError['message'], $lastError['file'], $lastError['line']);
                 }
