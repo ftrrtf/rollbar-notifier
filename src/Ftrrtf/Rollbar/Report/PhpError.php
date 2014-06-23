@@ -55,7 +55,7 @@ class PhpError extends BaseReport
             'constant' => 'E_STRICT',
             'level' => 'info'
         ),
-        4086 => array(
+        4096 => array(
             'constant' => 'E_RECOVERABLE_ERROR',
             'level' => 'error'
         ),
