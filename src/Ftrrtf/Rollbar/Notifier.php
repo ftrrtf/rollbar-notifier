@@ -241,13 +241,13 @@ class Notifier
 
     /**
      * Flushes the queue.
-     * Called internally when the queue exceeds $batch_size, and by Rollbar::flush
+     * Called internally when the queue exceeds batch_size, and by flush
      * on shutdown.
      */
     public function flush()
     {
         $queueSize = count($this->queue);
-        if (!$this->options['batched'] || $queueSize > 0) {
+        if ($queueSize > 0) {
             $this->logInfo('Flushing queue of size ' . $queueSize);
             $this->getTransport()->send($this->queue);
             $this->queue = array();
