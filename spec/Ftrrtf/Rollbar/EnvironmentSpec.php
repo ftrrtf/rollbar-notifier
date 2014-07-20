@@ -2,7 +2,6 @@
 
 namespace spec\Ftrrtf\Rollbar;
 
-use Ftrrtf\Rollbar\Environment;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -11,7 +10,7 @@ class EnvironmentSpec extends ObjectBehavior
     protected $options = array(
         'host' => 'test_host',
         'branch' => 'test_branch',
-        'root' => 'test_root'
+        'root_dir' => 'test_root_dir'
     );
 
     public function let()
@@ -105,7 +104,11 @@ class EnvironmentSpec extends ObjectBehavior
 
     public function it_get_server_data()
     {
-        $this->getServerData()->shouldReturn($this->options);
+        $this->getServerData()->shouldReturn([
+            'host'   => 'test_host',
+            'branch' => 'test_branch',
+            'root'   => 'test_root_dir'
+        ]);
     }
 
     public function it_get_person_data()
@@ -115,7 +118,7 @@ class EnvironmentSpec extends ObjectBehavior
 
     public function it_set_get_person_callback()
     {
-        $this->setOption('personFn', function() {
+        $this->setOption('person_callback', function() {
             return null;
         });
     }
