@@ -4,30 +4,30 @@ namespace Ftrrtf\Rollbar\Transport;
 
 class Agent implements TransportInterface
 {
-    protected $pathToAgent;
+    protected $logLocation;
 
-    protected $agent = null;
+    protected $agentLog = null;
 
     public function __construct($path)
     {
-        $this->pathToAgent = $path;
+        $this->logLocation = $path;
     }
 
     public function send($items)
     {
         foreach ($items as $item) {
-            fwrite($this->getAgent(), json_encode($item) . "\n");
+            fwrite($this->getAgentLog(), json_encode($item) . "\n");
         }
     }
 
-    protected function getAgent()
+    protected function getAgentLog()
     {
-        if (is_null($this->agent)) {
-            $pathToAgentRelay = $this->pathToAgent . '/rollbar-relay.' . getmypid() . '.' . microtime(true) . '.rollbar';
+        if (is_null($this->agentLog)) {
+            $pathToAgentRelay = $this->logLocation . '/rollbar-relay.' . getmypid() . '.' . microtime(true) . '.rollbar';
 
-            $this->agent = fopen($pathToAgentRelay, 'a');
+            $this->agentLog = fopen($pathToAgentRelay, 'a');
         }
 
-        return $this->agent;
+        return $this->agentLog;
     }
 }
