@@ -7,12 +7,14 @@ use Prophecy\Argument;
 
 class CurlSpec extends ObjectBehavior
 {
-    public function let()
+    function let()
     {
-        $apiUrl = 'rollbar_api';
-        $timeout = 3;
+        $accessToken = 'abc';
+        $apiUrl      = 'rollbar_api';
+        $timeout     = 3;
 
         $this->beConstructedWith(
+            $accessToken,
             $apiUrl,
             $timeout
         );
@@ -24,7 +26,7 @@ class CurlSpec extends ObjectBehavior
         $this->shouldImplement('Ftrrtf\Rollbar\Transport\TransportInterface');
     }
 
-    public function it_send_logs_to_api()
+    function it_send_logs_to_api()
     {
         $this->send(array());
     }

@@ -10,62 +10,60 @@ use Prophecy\Argument;
 class NotifierSpec extends ObjectBehavior
 {
 
-    public function let(Environment $environment, TransportInterface $transport)
+    function let(Environment $environment, TransportInterface $transport)
     {
         $options = array(
-            'access_token' => 'token',
             'batched' => false
         );
 
-        $this->beConstructedWith($environment, $options);
-        $this->setTransport($transport);
+        $this->beConstructedWith($environment, $transport, $options);
     }
 
-    public function it_is_initializable()
+    function it_is_initializable()
     {
         $this->shouldHaveType('Ftrrtf\Rollbar\Notifier');
     }
 
-    public function it_is_set_allowed_option()
+    function it_should_accept_allowed_option()
     {
         $this->setOption('batched', true);
     }
 
-    public function it_is_set_not_allowed_option()
+    function it_should_not_accept_invalid_option()
     {
         $this
             ->shouldThrow('Symfony\Component\OptionsResolver\Exception\InvalidOptionsException')
-            ->duringSetOption('custom', true);
+            ->duringSetOption('invalid_option_name', true);
     }
 
-    public function it_get_environment(Environment $environment)
+    function it_gets_environment(Environment $environment)
     {
         $this->getEnvironment()->shouldReturn($environment);
     }
 
-    public function it_report_message()
+    function it_reports_message()
     {
         $this->reportMessage('message text');
     }
 
-    public function it_report_exception()
+    function it_reports_exception()
     {
         $exception = new \Exception('test exception');
         $this->reportException($exception);
     }
 
-    public function it_report_php_error()
+    function it_reports_php_error()
     {
         $errno = $errstr = $errfile = $errline = '';
         $this->reportPhpError($errno, $errstr, $errfile, $errline);
     }
 
-    public function it_report_backtrace_message()
+    function it_reports_backtrace_message()
     {
         $this->reportBacktraceMessage(debug_backtrace(), 'message');
     }
 
-    public function it_should_be_use_adapter_to_send_message(TransportInterface $transport)
+    function it_should_be_use_transport_adapter_to_send_message(TransportInterface $transport)
     {
         $transport->send(Argument::any())->shouldBeCalled();
 

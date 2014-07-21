@@ -8,12 +8,12 @@ use Prophecy\Argument;
 class EnvironmentSpec extends ObjectBehavior
 {
     protected $options = array(
-        'host' => 'test_host',
-        'branch' => 'test_branch',
+        'host'     => 'test_host',
+        'branch'   => 'test_branch',
         'root_dir' => 'test_root_dir'
     );
 
-    public function let()
+    function let()
     {
         $this->beConstructedWith($this->options);
     }
@@ -23,36 +23,38 @@ class EnvironmentSpec extends ObjectBehavior
         $this->shouldHaveType('Ftrrtf\Rollbar\Environment');
     }
 
-    public function it_build_request_data()
+    function it_builds_request_data()
     {
-        $_SERVER['REQUEST_METHOD'] = 'method';
-        $_SERVER['SERVER_NAME'] = 'host';
-        $_SERVER['SERVER_PORT'] = 100;
-        $_SERVER['REQUEST_URI'] = '/test';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REMOTE_ADDR']    = '1.1.1.1';
+        $_SERVER['SERVER_NAME']    = 'host';
+        $_SERVER['SERVER_PORT']    = 100;
+        $_SERVER['REQUEST_URI']    = '/test';
+        $_SERVER['HTTP_KEY']       = 'header';
 
-        $_SERVER['HTTP_KEY'] = 'header';
-        $_GET = array('get_key' => 'get_value');
-        $_POST = array('post_key' => 'post_value');
+        $_GET     = array('get_key' => 'get_value');
+        $_POST    = array('post_key' => 'post_value');
         $_SESSION = array('session_key' => 'session_value');
 
         $this->getRequestData()->shouldBeLike(
             array(
-                'url' => "http://host:100/test",
+                'url'     => "http://host:100/test",
+                'user_ip' => "1.1.1.1",
+                'method'  => 'GET',
                 'headers' => array(
                     'Key' => 'header'
                 ),
-                'method' => $_SERVER['REQUEST_METHOD'],
-                'GET' => $_GET,
-                'POST' => $_POST,
+                'GET'     => $_GET,
+                'POST'    => $_POST,
                 'session' => $_SESSION,
             )
         );
     }
 
-    public function it_get_http_headers()
+    function it_gets_http_headers()
     {
-        $_SERVER  = array(
-            'HTTP_KEY' => 'value1',
+        $_SERVER = array(
+            'HTTP_KEY'    => 'value1',
             'NO_HTTP_KEY' => 'value2'
         );
 
@@ -63,10 +65,10 @@ class EnvironmentSpec extends ObjectBehavior
         );
     }
 
-    public function it_get_current_url()
+    function it_gets_current_url()
     {
-        $_SERVER  = array(
-            'HTTPS' => 'on',
+        $_SERVER = array(
+            'HTTPS'       => 'on',
             'SERVER_NAME' => 'server_name',
             'SERVER_PORT' => 100,
             'REQUEST_URI' => '/test'
@@ -75,23 +77,18 @@ class EnvironmentSpec extends ObjectBehavior
         $this->getCurrentUrl()->shouldReturn('https://server_name:100/test');
     }
 
-    public function it_get_framework()
+    function it_gets_framework()
     {
         $this->beConstructedWith(array('framework' => 'framework 1.5'));
         $this->getFramework()->shouldReturn('framework 1.5');
     }
 
-    public function it_is_get_custom_data()
+    function it_gets_user_ip()
     {
-//        $this->getCustomData();
-    }
-
-    public function it_get_user_ip()
-    {
-        $_SERVER  = array(
+        $_SERVER = array(
             'HTTP_X_FORWARDED_FOR' => '0.0.0.0',
-            'HTTP_X_REAL_IP' => '0.0.0.1',
-            'REMOTE_ADDR' => '0.0.0.2',
+            'HTTP_X_REAL_IP'       => '0.0.0.1',
+            'REMOTE_ADDR'          => '0.0.0.2',
         );
         $this->getUserIp()->shouldReturn('0.0.0.0');
 
@@ -102,25 +99,39 @@ class EnvironmentSpec extends ObjectBehavior
         $this->getUserIp()->shouldReturn('0.0.0.2');
     }
 
-    public function it_get_server_data()
+    function it_gets_server_data()
     {
-        $this->getServerData()->shouldReturn([
-            'host'   => 'test_host',
-            'branch' => 'test_branch',
-            'root'   => 'test_root_dir'
-        ]);
+        $this->getServerData()->shouldReturn(
+            array(
+                'host'   => 'test_host',
+                'branch' => 'test_branch',
+                'root'   => 'test_root_dir'
+            )
+        );
     }
 
-    public function it_get_person_data()
+    function it_gets_custom_data()
+    {
+        $this->getCustomData()->shouldReturn(array());
+
+        $_SERVER['REQUEST_TIME_FLOAT'] = 123;
+
+        $this->getCustomData()->shouldHaveKey('runtime');
+    }
+
+    function it_gets_person_data()
     {
         $this->getPersonData();
     }
 
-    public function it_set_get_person_callback()
+    function it_sets_callback_for_getting_person_data()
     {
-        $this->setOption('person_callback', function() {
-            return null;
-        });
+        $this->setOption(
+            'person_callback',
+            function () {
+                return null;
+            }
+        );
     }
 
     function letgo()
@@ -129,5 +140,14 @@ class EnvironmentSpec extends ObjectBehavior
         $_POST    = array();
         $_GET     = array();
         $_SERVER  = array();
+    }
+
+    public function getMatchers()
+    {
+        return array(
+            'haveKey' => function($subject, $key) {
+                return array_key_exists($key, $subject);
+            }
+        );
     }
 }

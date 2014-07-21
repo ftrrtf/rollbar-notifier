@@ -7,7 +7,7 @@ use Prophecy\Argument;
 
 class BacktraceSpec extends ObjectBehavior
 {
-    public function let()
+    function let()
     {
         $message = 'message';
         $backtrace = array();

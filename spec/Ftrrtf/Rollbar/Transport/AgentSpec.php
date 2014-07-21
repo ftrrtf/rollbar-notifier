@@ -7,7 +7,7 @@ use Prophecy\Argument;
 
 class AgentSpec extends ObjectBehavior
 {
-    public function let()
+    function let()
     {
         $agentPath = 'path/to/agent';
 
@@ -20,7 +20,7 @@ class AgentSpec extends ObjectBehavior
         $this->shouldImplement('Ftrrtf\Rollbar\Transport\TransportInterface');
     }
 
-    public function it_send_items_to_agent()
+    function it_send_items_to_agent()
     {
         $this->send(array());
     }
