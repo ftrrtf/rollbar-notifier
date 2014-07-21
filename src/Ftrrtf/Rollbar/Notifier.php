@@ -19,6 +19,12 @@ class Notifier
     const VERSION = '1.0';
     const ROLLBAR_CLIENT_COMPATIBILITY_VERSION = "0.9.6";
 
+    const LEVEL_DEBUG    = 'debug';
+    const LEVEL_INFO     = 'info';
+    const LEVEL_WARNING  = 'warning';
+    const LEVEL_ERROR    = 'error';
+    const LEVEL_CRITICAL = 'critical';
+
     /**
      * @var array
      */
@@ -94,7 +100,7 @@ class Notifier
         }
     }
 
-    public function reportMessage($message, $level = 'error', $extraData = null)
+    public function reportMessage($message, $level = self::LEVEL_ERROR, $extraData = null)
     {
         try {
             return $this->report(
@@ -110,7 +116,7 @@ class Notifier
         }
     }
 
-    public function reportBacktraceMessage($backtrace, $message, $level = 'error', $extraData = null)
+    public function reportBacktraceMessage($backtrace, $message, $level = self::LEVEL_ERROR, $extraData = null)
     {
         try {
             return $this->report(

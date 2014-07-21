@@ -2,6 +2,8 @@
 
 namespace Ftrrtf\Rollbar\Report;
 
+use Ftrrtf\Rollbar\Notifier;
+
 class PhpError extends BaseReport
 {
     protected $captureErrorBacktraces;
@@ -9,63 +11,63 @@ class PhpError extends BaseReport
     static $phpErrors = array(
         E_ERROR => array(
             'constant' => 'E_ERROR',
-            'level' => 'error'
+            'level' => Notifier::LEVEL_ERROR
         ),
         E_WARNING => array(
             'constant' => 'E_WARNING',
-            'level' => 'warning'
+            'level' => Notifier::LEVEL_WARNING
         ),
         E_PARSE => array(
             'constant' => 'E_PARSE',
-            'level' => 'error'
+            'level' => Notifier::LEVEL_ERROR
         ),
         E_NOTICE => array(
             'constant' => 'E_NOTICE',
-            'level' => 'info'
+            'level' => Notifier::LEVEL_INFO
         ),
         E_CORE_ERROR => array(
             'constant' => 'E_CORE_ERROR',
-            'level' => 'error'
+            'level' => Notifier::LEVEL_ERROR
         ),
         E_CORE_WARNING => array(
             'constant' => 'E_CORE_WARNING',
-            'level' => 'error'
+            'level' => Notifier::LEVEL_ERROR
         ),
         E_COMPILE_ERROR => array(
             'constant' => 'E_COMPILE_ERROR',
-            'level' => 'error'
+            'level' => Notifier::LEVEL_ERROR
         ),
         E_COMPILE_WARNING => array(
             'constant' => 'E_COMPILE_WARNING',
-            'level' => 'error'
+            'level' => Notifier::LEVEL_ERROR
         ),
         E_USER_ERROR => array(
             'constant' => 'E_USER_ERROR',
-            'level' => 'error'
+            'level' => Notifier::LEVEL_ERROR
         ),
         E_USER_WARNING => array(
             'constant' => 'E_USER_WARNING',
-            'level' => 'warning'
+            'level' => Notifier::LEVEL_WARNING
         ),
         E_USER_NOTICE => array(
             'constant' => 'E_USER_NOTICE',
-            'level' => 'info'
+            'level' => Notifier::LEVEL_INFO
         ),
         E_STRICT => array(
             'constant' => 'E_STRICT',
-            'level' => 'info'
+            'level' => Notifier::LEVEL_INFO
         ),
         E_RECOVERABLE_ERROR => array(
             'constant' => 'E_RECOVERABLE_ERROR',
-            'level' => 'error'
+            'level' => Notifier::LEVEL_ERROR
         ),
         E_DEPRECATED => array(
             'constant' => 'E_DEPRECATED',
-            'level' => 'info'
+            'level' => Notifier::LEVEL_INFO
         ),
         E_USER_DEPRECATED => array(
             'constant' => 'E_USER_DEPRECATED',
-            'level' => 'info'
+            'level' => Notifier::LEVEL_INFO
         ),
     );
 
