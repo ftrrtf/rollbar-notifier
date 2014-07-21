@@ -1,2 +1,3 @@
 extensions:
-#    - Knp\PhpSpec\WellDone\Extension
+
+formatter.name: pretty
