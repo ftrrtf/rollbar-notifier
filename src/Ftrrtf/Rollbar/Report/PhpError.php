@@ -7,63 +7,63 @@ class PhpError extends BaseReport
     protected $captureErrorBacktraces;
 
     static $phpErrors = array(
-        1 => array(
+        E_ERROR => array(
             'constant' => 'E_ERROR',
             'level' => 'error'
         ),
-        2 => array(
+        E_WARNING => array(
             'constant' => 'E_WARNING',
             'level' => 'warning'
         ),
-        4 => array(
+        E_PARSE => array(
             'constant' => 'E_PARSE',
             'level' => 'error'
         ),
-        8 => array(
+        E_NOTICE => array(
             'constant' => 'E_NOTICE',
             'level' => 'info'
         ),
-        16 => array(
+        E_CORE_ERROR => array(
             'constant' => 'E_CORE_ERROR',
             'level' => 'error'
         ),
-        32 => array(
+        E_CORE_WARNING => array(
             'constant' => 'E_CORE_WARNING',
             'level' => 'error'
         ),
-        64 => array(
+        E_COMPILE_ERROR => array(
             'constant' => 'E_COMPILE_ERROR',
             'level' => 'error'
         ),
-        128 => array(
+        E_COMPILE_WARNING => array(
             'constant' => 'E_COMPILE_WARNING',
             'level' => 'error'
         ),
-        256 => array(
+        E_USER_ERROR => array(
             'constant' => 'E_USER_ERROR',
             'level' => 'error'
         ),
-        512 => array(
+        E_USER_WARNING => array(
             'constant' => 'E_USER_WARNING',
             'level' => 'warning'
         ),
-        1024 => array(
+        E_USER_NOTICE => array(
             'constant' => 'E_USER_NOTICE',
             'level' => 'info'
         ),
-        2048 => array(
+        E_STRICT => array(
             'constant' => 'E_STRICT',
             'level' => 'info'
         ),
-        4096 => array(
+        E_RECOVERABLE_ERROR => array(
             'constant' => 'E_RECOVERABLE_ERROR',
             'level' => 'error'
         ),
-        8192 => array(
+        E_DEPRECATED => array(
             'constant' => 'E_DEPRECATED',
             'level' => 'info'
         ),
-        16384 => array(
+        E_USER_DEPRECATED => array(
             'constant' => 'E_USER_DEPRECATED',
             'level' => 'info'
         ),
