@@ -16,28 +16,18 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class Notifier
 {
-    const VERSION = '0.1';
-    const ROLLBAR_CLIENT_COMPATIBILITY_VERSION = "0.6.2";
-
-    // ignore E_STRICT and above
-//    protected $maxErrno = E_USER_NOTICE;
-
-
-//    protected $captureErrorBacktraces = true;
+    const VERSION = '1.0';
+    const ROLLBAR_CLIENT_COMPATIBILITY_VERSION = "0.9.6";
 
     /**
      * @var array
      */
     protected $options;
 
-    protected $requiredOptions = array(
-        'access_token'
-    );
-
     /**
-     * @var array
+     * @var bool
      */
-    protected $errorSampleRates = array();
+    protected $iconvAvailable;
 
     /**
      * @var array payload queue, used when $batched is true
@@ -59,15 +49,15 @@ class Notifier
      */
     protected $transport;
 
-    protected $mtRandmax;
-
     /**
-     * @param Environment $environment
-     * @param array       $options
+     * @param Environment        $environment
+     * @param TransportInterface $transport
+     * @param array              $options
      */
-    public function __construct(Environment $environment, $options)
+    public function __construct(Environment $environment, TransportInterface $transport, $options = array())
     {
         $this->environment = $environment;
+        $this->transport = $transport;
 
         $resolver = new OptionsResolver();
         $this->setDefaultOptions($resolver);
@@ -78,48 +68,12 @@ class Notifier
     {
         $resolver = new OptionsResolver();
         $resolver->setDefaults($this->options);
-        $resolver->setRequired($this->requiredOptions);
         $this->options = $resolver->resolve(array($option => $value));
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @return Environment
      */
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(
-            array(
-                'batched' => true,
-                'batch_size' => 50,
-                'report_suppressed' => false
-//                'capture_error_backtraces',
-//                'error_sample_rates',
-//                'logger',
-//                'max_errno',
-            )
-        );
-
-        $resolver->setRequired($this->requiredOptions);
-    }
-
-    public function setTransport(TransportInterface $transport)
-    {
-        $this->transport = $transport;
-    }
-
-    /**
-     * @return TransportInterface
-     */
-    public function getTransport()
-    {
-        // Default transport
-        if (is_null($this->transport)) {
-            $this->setTransport(new Curl());
-        }
-
-        return $this->transport;
-    }
-
     public function getEnvironment()
     {
         return $this->environment;
@@ -180,52 +134,7 @@ class Notifier
             return false;
         }
 
-//        // fill in missing values in error_sample_rates
-//        $levels = array(
-//            E_WARNING,
-//            E_NOTICE,
-//            E_USER_ERROR,
-//            E_USER_WARNING,
-//            E_USER_NOTICE,
-//            E_STRICT,
-//            E_RECOVERABLE_ERROR
-//        );
-//
-//        // PHP 5.3.0
-//        if (defined('E_DEPRECATED')) {
-//            $levels = array_merge($levels, array(E_DEPRECATED, E_USER_DEPRECATED));
-//        }
-//
-//        $current = 1;
-//        for ($i = 0, $num = count($levels); $i < $num; $i++) {
-//            $level = $levels[$i];
-//            if (isset($this->errorSampleRates[$level])) {
-//                $current = $this->errorSampleRates[$level];
-//            } else {
-//                $this->errorSampleRates[$level] = $current;
-//            }
-//        }
-//
-//        // cache this value
-//        $this->mtRandmax = mt_getrandmax();
-
         try {
-//            if ($this->maxErrno != -1 && $errno >= $this->maxErrno) {
-//                // ignore
-//                return;
-//            }
-//
-//            if (isset($this->errorSampleRates[$errno])) {
-//                // get a float in the range [0, 1)
-//                // mt_rand() is inclusive, so add 1 to mt_randmax
-//                $float_rand = mt_rand() / ($this->mtRandmax + 1);
-//                if ($float_rand > $this->errorSampleRates[$errno]) {
-//                    // skip
-//                    return;
-//                }
-//            }
-
-
             return $this->report(
                 new Report\PhpError($errorLevel, $errorMessage, $errorFile, $errorLine),
                 Report\PhpError::getErrorLevel($errorLevel)
@@ -269,10 +178,34 @@ class Notifier
         $data['person'] = $this->environment->getPersonData();
         $data['custom'] = $this->environment->getCustomData();
 
+        $this->sanitizeUTF8($data);
+
         $payload = $this->buildPayload($data);
         $this->sendPayload($payload);
 
         return $data['uuid'];
+    }
+
+    /**
+     * Sanitize non utf-8 values
+     *
+     * @param $data
+     */
+    protected function sanitizeUTF8(&$data) {
+        if (!isset($this->iconvAvailable)) {
+            $this->iconvAvailable = function_exists('iconv');
+        }
+
+        if ($this->iconvAvailable) {
+            array_walk_recursive(
+                $data,
+                function(&$value) {
+                    if (is_string($value)) {
+                        $value = iconv('UTF-8', 'UTF-8//IGNORE', $value);
+                    }
+                }
+            );
+        }
     }
 
     protected function buildBaseData($level = 'error')
@@ -298,7 +231,6 @@ class Notifier
     protected function buildPayload($data)
     {
         return array(
-            'access_token' => $this->options['access_token'],
             'data' => $data
         );
     }
@@ -367,5 +299,28 @@ class Notifier
         if ($this->logger !== null) {
             $this->logger->log($level, $msg);
         }
+    }
+
+    /**
+     * @return TransportInterface
+     */
+    protected function getTransport()
+    {
+        return $this->transport;
+    }
+
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
+    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array(
+                'batched' => false,
+                'batch_size' => 50,
+                'report_suppressed' => false
+//                'logger',
+            )
+        );
     }
 }

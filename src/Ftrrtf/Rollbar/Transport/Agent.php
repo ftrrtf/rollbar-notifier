@@ -23,10 +23,7 @@ class Agent implements TransportInterface
     protected function getAgent()
     {
         if (is_null($this->agent)) {
-            $pathToAgentRelay = $this->pathToAgent . '/rollbar-relay.' . getmypid() . '.rollbar';
-            if (!file_exists($pathToAgentRelay)) {
-                throw new AgentNotFoundException();
-            }
+            $pathToAgentRelay = $this->pathToAgent . '/rollbar-relay.' . getmypid() . '.' . microtime(true) . '.rollbar';
 
             $this->agent = fopen($pathToAgentRelay, 'a');
         }

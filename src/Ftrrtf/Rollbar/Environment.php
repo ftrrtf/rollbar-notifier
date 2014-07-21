@@ -228,14 +228,17 @@ class Environment
 
     public function scrubRequestParams($params)
     {
+        $scrubbed = array();
         foreach ($params as $k => $v) {
             if (in_array($k, $this->options['scrub_fields'])) {
                 $count = is_array($v) ? count($v) : strlen($v);
-                $params[$k] = str_repeat('*', $count);
+                $scrubbed[$k] = str_repeat('*', $count);
+            } else {
+                $scrubbed[$k] = $v;
             }
         }
 
-        return $params;
+        return $scrubbed;
     }
 
     /**

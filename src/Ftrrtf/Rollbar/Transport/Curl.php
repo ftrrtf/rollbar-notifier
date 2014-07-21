@@ -4,19 +4,55 @@ namespace Ftrrtf\Rollbar\Transport;
 
 class Curl implements TransportInterface
 {
-    protected $timeout;
+    protected $accessToken;
     protected $baseApiUrl;
+    protected $timeout;
 
-    public function __construct($baseApiUrl = 'https://api.rollbar.com/api/1/', $timeout = 3)
+    /**
+     * @param string $accessToken
+     * @param string $baseApiUrl
+     * @param int    $timeout
+     */
+    public function __construct($accessToken, $baseApiUrl = 'https://api.rollbar.com/api/1/', $timeout = 3)
     {
-        $this->baseApiUrl = $baseApiUrl;
-        $this->timeout = $timeout;
+        $this->accessToken = $accessToken;
+        $this->baseApiUrl  = $baseApiUrl;
+        $this->timeout     = $timeout;
     }
 
+    /**
+     * @param $items
+     */
     public function send($items)
     {
-        $postData = json_encode($items);
-        $url = $this->baseApiUrl . 'item_batch' . '/';
+        $itemsCount = count($items);
+
+        if ($itemsCount == 0) {
+            return;
+        }
+
+        foreach ($items as &$item) {
+            $item['access_token'] = $this->accessToken;
+        }
+        unset($item);
+
+
+        if ($itemsCount == 1) {
+            return $this->apiCall('item', json_encode(array_pop($items)));
+        }
+
+        if ($itemsCount > 1) {
+            return $this->apiCall('item_batch', json_encode($items));
+        }
+    }
+
+    /**
+     * @param $action
+     * @param $postData
+     */
+    protected function apiCall($action, $postData)
+    {
+        $url = $this->baseApiUrl . $action . '/';
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -26,8 +62,12 @@ class Curl implements TransportInterface
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-        $result = curl_exec($ch);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-Rollbar-Access-Token: ' . $this->accessToken));
+
+        $result     = curl_exec($ch);
         $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $err        = curl_errno($ch);
+        $errmsg     = curl_error($ch);
         curl_close($ch);
 
         //        if ($statusCode != 200) {
