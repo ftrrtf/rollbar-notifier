@@ -305,11 +305,7 @@ class Environment
             )
         );
 
-        $resolver->setAllowedTypes(
-            array(
-                'scrub_fields' => 'array',
-            )
-        );
+        $resolver->setAllowedTypes('scrub_fields', 'array');
 
         $resolver->setRequired($this->requiredOptions);
     }
