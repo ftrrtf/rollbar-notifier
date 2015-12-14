@@ -7,7 +7,6 @@ use Ftrrtf\Rollbar\Transport\Curl;
 use Ftrrtf\Rollbar\Report;
 use Ftrrtf\Rollbar\Report\ReportInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Class Notifier
@@ -316,9 +315,9 @@ class Notifier
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
