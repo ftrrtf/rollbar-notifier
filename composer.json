@@ -17,8 +17,8 @@
         }
     ],
     "require" : {
-        "symfony/options-resolver" : ">=2.1,<3.0",
-        "php" : ">=5.3"
+        "php": ">=5.5.9",
+        "symfony/options-resolver" : "^2.7.3|^3.0"
     },
     "suggest": {
         "ext-curl" : "cUrl extension for cUrl transport"

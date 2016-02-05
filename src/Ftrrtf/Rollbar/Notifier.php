@@ -3,11 +3,10 @@
 namespace Ftrrtf\Rollbar;
 
 use Ftrrtf\Rollbar\Transport\TransportInterface;
-use Ftrrtf\Rollbar\Transport\Curl;
 use Ftrrtf\Rollbar\Report;
 use Ftrrtf\Rollbar\Report\ReportInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\Options;
 
 /**
  * Class Notifier
@@ -316,9 +315,9 @@ class Notifier
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param Options $resolver
      */
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(Options $resolver)
     {
         $resolver->setDefaults(
             array(

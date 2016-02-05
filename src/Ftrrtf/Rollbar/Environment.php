@@ -2,9 +2,8 @@
 
 namespace Ftrrtf\Rollbar;
 
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\Options;
 
 /**
  * Class Request
@@ -278,9 +277,9 @@ class Environment
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param Options $resolver
      */
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(Options $resolver)
     {
         $resolver->setDefaults(
             array(
@@ -305,11 +304,7 @@ class Environment
             )
         );
 
-        $resolver->setAllowedTypes(
-            array(
-                'scrub_fields' => 'array',
-            )
-        );
+        $resolver->setAllowedTypes('scrub_fields', ['array']);
 
         $resolver->setRequired($this->requiredOptions);
     }

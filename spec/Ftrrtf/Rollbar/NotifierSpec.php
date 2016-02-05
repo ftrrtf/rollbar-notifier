@@ -6,6 +6,7 @@ use Ftrrtf\Rollbar\Transport\TransportInterface;
 use Ftrrtf\Rollbar\Environment;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 class NotifierSpec extends ObjectBehavior
 {
@@ -32,7 +33,7 @@ class NotifierSpec extends ObjectBehavior
     function it_should_not_accept_invalid_option()
     {
         $this
-            ->shouldThrow('Symfony\Component\OptionsResolver\Exception\InvalidOptionsException')
+            ->shouldThrow(UndefinedOptionsException::class)
             ->duringSetOption('invalid_option_name', true);
     }
 
