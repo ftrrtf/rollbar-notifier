@@ -1,37 +1,36 @@
 {
-    "name" : "ftrrtf/rollbar-notifier",
-    "description" : "Monitors errors and exceptions and reports them to Rollbar",
-    "keywords" : ["logging", "debugging", "monitoring", "errors", "exceptions"],
-    "type" : "library",
-    "license" : "MIT",
-    "authors" : [
+    "name": "ftrrtf/rollbar-notifier",
+    "description": "Monitors errors and exceptions and reports them to Rollbar",
+    "keywords": ["logging", "debugging", "monitoring", "errors", "exceptions"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
         {
-            "name" : "Valeriy Rabievskiy",
-            "email" : "dev@ftrrtf.com",
-            "role" : "Developer"
+            "name": "Valeriy Rabievskiy",
+            "email": "dev@ftrrtf.com",
+            "role": "Developer"
         },
         {
-            "name" : "Brian Rue",
-            "email" : "brian@rollbar.com",
-            "role" : "Developer"
+            "name": "Brian Rue",
+            "email": "brian@rollbar.com",
+            "role": "Developer"
         }
     ],
-    "require" : {
+    "require": {
         "php": ">=5.5.9",
-        "symfony/options-resolver" : "^2.7.3|^3.0"
+        "symfony/options-resolver": "^2.7.3|^3.0"
     },
     "suggest": {
-        "ext-curl" : "cUrl extension for cUrl transport"
+        "ext-curl": "cUrl extension for curl transport"
     },
-    "require-dev" : {
-        "phpspec/phpspec" : "2.*"
+    "require-dev": {
+        "phpspec/phpspec": "^2.4",
+        "phpunit/phpunit": "^4.8",
+        "mikey179/vfsStream": "^1.6"
     },
-    "config" : {
-        "bin-dir" : "bin"
-    },
-    "autoload" : {
-        "psr-0" : {
-            "Ftrrtf\\" : "src/"
+    "autoload": {
+        "psr-4": {
+            "Ftrrtf\\Rollbar\\": "src/"
         }
     }
 }
