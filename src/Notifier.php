@@ -317,7 +317,7 @@ class Notifier
     /**
      * @param Options $resolver
      */
-    protected function setDefaultOptions(Options $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
