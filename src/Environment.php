@@ -279,7 +279,7 @@ class Environment
     /**
      * @param Options $resolver
      */
-    protected function setDefaultOptions(Options $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
@@ -304,7 +304,7 @@ class Environment
             )
         );
 
-        $resolver->setAllowedTypes('scrub_fields', ['array']);
+        $resolver->setAllowedTypes(['scrub_fields' => 'array']);
 
         $resolver->setRequired($this->requiredOptions);
     }
